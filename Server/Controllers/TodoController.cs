@@ -25,7 +25,7 @@ namespace DotNetBlazorEFCSQLExperimental.Server.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetSingeTodo(int id)
+        public async Task<IActionResult> GetSingleTodo(int id)
         {
             var todo = todos.FirstOrDefault(x => x.Id == id);
             if (todo == null)
@@ -35,5 +35,11 @@ namespace DotNetBlazorEFCSQLExperimental.Server.Controllers
 
             return Ok(todo);
         }
+
+        //[HttpPut]
+        //public async Task<IActionResult> UpdateTodo()
+        //{
+
+        //}
     }
 }

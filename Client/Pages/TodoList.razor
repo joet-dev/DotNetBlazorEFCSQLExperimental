@@ -6,10 +6,16 @@
 @inject ITodoService TodoService; 
 @inject NavigationManager NavigationManager; 
 
+<div class="row">
+    <div class="col-auto">
+        <h1>Todo List</h1>
+    </div>
+    <div class="col-auto">
+        <button type="button" class="btn btn-success">Create</button>
+    </div>
+</div>
 
-<h1>Todo List</h1>
-
-<form class="mb-4">
+<form class="mb-4">y
     <input type="number" @bind="id" />
     <button @onclick="GetTodo">Search</button>
 </form>
