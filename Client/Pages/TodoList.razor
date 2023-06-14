@@ -1,0 +1,54 @@
+﻿@page "/todo" 
+
+@using DotNetBlazorEFCSQLExperimental.Client.Services;
+@using DotNetBlazorEFCSQLExperimental.Shared;
+
+@inject ITodoService TodoService; 
+@inject NavigationManager NavigationManager; 
+
+
+<h1>Todo List</h1>
+
+<form class="mb-4">
+    <input type="number" @bind="id" />
+    <button @onclick="GetTodo">Search</button>
+</form>
+
+@foreach (var todo in todolist)
+{
+    <div class="card shadow-sm mb-2">
+        <div class="card-body">
+            <h5 class="card-title">
+                <input class="check-input" type="checkbox" @bind="todo.IsDone">
+                @todo.Title <small>@todo.Priority</small>
+            </h5>
+            <p class="card-subtitle text-muted">@todo.Created.AddMinutes(todo.Duration).ToString()</p>
+            <p class="card-text">
+                @todo.Note
+            </p>
+            <button class="btn btn-primary" @onclick="(() => EditTodo(todo.Id))">Edit</button>
+        </div>
+    </div>
+}
+
+@code {
+    List<Todo> todolist = new List<Todo>();
+
+    int id; 
+
+    protected override async Task OnInitializedAsync()
+    {
+        todolist = await TodoService.GetTodos(); 
+    }
+
+    public async Task GetTodo()
+    {
+        todolist.Clear(); 
+        todolist.Add(await TodoService.GetTodo(id)); 
+    }
+
+    public void EditTodo(int id)
+    {
+        NavigationManager.NavigateTo($"todo/{id}");
+    }
+}
