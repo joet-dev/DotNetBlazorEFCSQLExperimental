@@ -29,9 +29,9 @@ namespace DotNetBlazorEFCSQLExperimental.Client.Services
             return todos; 
         }
 
-        //public async void UpdateTodo(Todo todo)
-        //{
-        //    await _httpClient.PostAsJsonAsync($"api/todo", todo);
-        //}
+        public async void UpdateTodo(Todo todo)
+        {
+            await _httpClient.PutAsJsonAsync($"api/todo/{todo.Id}", todo);
+        }
     }
 }

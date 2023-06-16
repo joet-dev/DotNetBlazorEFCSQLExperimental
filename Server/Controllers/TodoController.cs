@@ -47,11 +47,15 @@ namespace DotNetBlazorEFCSQLExperimental.Server.Controllers
             return Ok(todos); 
         }
 
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> UpdateTodo(int id, Todo todo)
-        //{
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateTodo(int id, Todo todo)
+        {
+            var item = todos.SingleOrDefault(x => x.Id == id);
+            if (item != null) todos.Remove(item);
 
-        //    return Ok(); 
-        //}
+            todos.Add(todo); 
+
+            return Ok();
+        }
     }
 }

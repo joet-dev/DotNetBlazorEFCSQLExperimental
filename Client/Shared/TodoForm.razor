@@ -95,7 +95,7 @@
             todo.Created = DateTime.Now;
 
             Console.WriteLine($"Creating Todo!");
-            JSRuntime.InvokeVoidAsync("console.log", todo); 
+            await JSRuntime.InvokeVoidAsync("console.log", todo); 
             //await TodoService.CreateTodo(todo); 
 
             await TodoService.CreateTodo(todo); 
@@ -105,8 +105,10 @@
         else
         {
             Console.WriteLine($"Updating Todo!");
-            JSRuntime.InvokeVoidAsync("console.log", todo);
-            // TodoService.UpdateTodo(todo); 
+            await JSRuntime.InvokeVoidAsync("console.log", todo);
+
+            TodoService.UpdateTodo(todo); 
+            NavigationManager.NavigateTo($"todo/");
         }
     }
 }
