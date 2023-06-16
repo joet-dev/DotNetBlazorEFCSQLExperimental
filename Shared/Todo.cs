@@ -13,9 +13,19 @@ namespace DotNetBlazorEFCSQLExperimental.Shared
         public bool IsDone { get; set; } = false; 
         public int Priority { get; set; }
         public string Note { get; set; }
-        public DateTime Created { get; set; }
+        public DateTime Created { get; set; } = DateTime.Now; 
         public int Duration { get; set; }
         public DateTime Due { get; set; }
         public DateTime? Completed { get; set; }
+
+        public override string ToString()
+        {
+            return $"{IsDone} - ID: {Id}: {Title} ({Note}) \n" +
+                $"Prio: {Priority}\n" +
+                $"Duration: {Duration} minutes\n" +
+                $"Created: {Created}\n" +
+                $"Due: {Due}\n" +
+                $"Completed: {Completed}";
+        }
     }
 }

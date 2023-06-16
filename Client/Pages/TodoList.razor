@@ -6,12 +6,14 @@
 @inject ITodoService TodoService; 
 @inject NavigationManager NavigationManager; 
 
+<PageTitle>Todo</PageTitle>
+
 <div class="row">
     <div class="col-auto">
         <h1>Todo List</h1>
     </div>
     <div class="col-auto">
-        <button type="button" class="btn btn-success">Create</button>
+        <button type="button" class="btn btn-success" @onclick="CreateTodo">Create</button>
     </div>
 </div>
 
@@ -37,6 +39,8 @@
     </div>
 }
 
+<br />
+
 @code {
     List<Todo> todolist = new List<Todo>();
 
@@ -56,5 +60,10 @@
     public void EditTodo(int id)
     {
         NavigationManager.NavigateTo($"todo/{id}");
+    }
+
+    public void CreateTodo()
+    {
+        NavigationManager.NavigateTo("todocreate"); 
     }
 }

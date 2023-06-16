@@ -12,10 +12,12 @@ namespace DotNetBlazorEFCSQLExperimental.Server.Controllers
     [ApiController]
     public class TodoController : ControllerBase
     {
-        List<Todo> todos = new List<Todo>
+        static List<Todo> todos = new List<Todo>
         {
-            new Todo { Id=1, Title="TestTitle", IsDone=false, Priority=5, Note="TestNote", Created=DateTime.Now, Duration=10 },
-            new Todo { Id=2, Title="TestTitle2", IsDone=false, Priority=6, Note="TestNote2", Created=DateTime.Now, Duration=10 }
+            new Todo { Id=4, Title="TEST", IsDone=false, Priority=4, Note="TEST", Created=DateTime.Now, Due=DateTime.Now, Duration=10  },
+            new Todo { Id=0, Title="TestZero", IsDone=false, Priority=4, Note="Testing...", Created=DateTime.Now, Due=DateTime.Now, Duration=10 },
+            new Todo { Id=1, Title="TestTitle", IsDone=false, Priority=5, Note="TestNote", Created=DateTime.Now, Due=DateTime.Now, Duration=10 },
+            new Todo { Id=2, Title="TestTitle2", IsDone=false, Priority=6, Note="TestNote2", Created=DateTime.Now, Due=DateTime.Now, Duration=10 }
         };
 
         [HttpGet]
@@ -36,18 +38,20 @@ namespace DotNetBlazorEFCSQLExperimental.Server.Controllers
             return Ok(todo);
         }
 
-        //[HttpPut]
-        //public async Task<IActionResult> UpdateTodo()
-        //{
-
-        //}
-
         [HttpPost]
         public async Task<IActionResult> CreateTodo(Todo todo)
         {
+            todo.Id = todos.Max(t => t.Id + 1); 
             todos.Add(todo);
 
-            return Ok(); 
+            return Ok(todos); 
         }
+
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> UpdateTodo(int id, Todo todo)
+        //{
+
+        //    return Ok(); 
+        //}
     }
 }

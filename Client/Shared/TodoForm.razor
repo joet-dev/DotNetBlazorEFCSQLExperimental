@@ -2,6 +2,9 @@
 @using DotNetBlazorEFCSQLExperimental.Shared;
 
 @inject ITodoService TodoService;
+@inject IJSRuntime JSRuntime;
+@inject NavigationManager NavigationManager;
+
 
 <EditForm Model="todo" OnValidSubmit="HandleSubmit">
     <div class="mb-3">
@@ -40,38 +43,70 @@
             </div>
         </div>
     </div>
-    <button type="submit" class="create-button btn btn-primary mb-3">Submit</button>
+    <button type="submit" class="create-button btn btn-primary mb-3">@submitButtonLabel</button>
 </EditForm>
 
 @code {
     [Parameter]
-    public int id { get; set; }
+    public Todo? todo { get; set; }
+    bool modeCreate = false; 
 
-    Todo todo { get; set; } = new Todo();
-
-    DateOnly datetemp = DateOnly.FromDateTime(DateTime.Now);
-    TimeOnly timetemp = new TimeOnly(23, 59, 0);
+    DateOnly datetemp;
+    TimeOnly timetemp;
 
     int durationHrs; 
     int durationMins;
 
+    // Add validation for duration. 
+
+    private string submitButtonLabel = "Submit";
+
     protected override void OnInitialized()
     {
-        durationHrs = todo.Duration % 60;
-        durationMins = todo.Duration / 60;
+        if (todo == null)
+        {
+            modeCreate = true;
+            submitButtonLabel = "Create";
+            Console.WriteLine("Creating Todo."); 
+
+            todo = new Todo(); 
+            datetemp = DateOnly.FromDateTime(DateTime.Now);
+            timetemp = new TimeOnly(23, 59, 0);
+        } 
+        else
+        {
+            submitButtonLabel = "Update"; 
+            Console.WriteLine("Editing Todo.");
+
+            durationHrs = todo.Duration / 60;
+            durationMins = todo.Duration % 60;
+            datetemp = DateOnly.FromDateTime(todo.Created); 
+            timetemp = TimeOnly.FromDateTime(todo.Created);
+        }
     }
 
-    protected override async Task OnInitializedAsync()
-    {
-        todo = await TodoService.GetTodo(id);
-    }
-    
-    void HandleSubmit()
+    async void HandleSubmit()
     {
         todo.Duration = (durationHrs * 60) + durationMins;
-        todo.Due = datetemp.ToDateTime(timetemp); 
-        Console.WriteLine($"Submit Called! {todo}"); 
+        todo.Due = datetemp.ToDateTime(timetemp);
 
-        //await TodoService.CreateTodo(todo); 
+        if (modeCreate)
+        {
+            todo.Created = DateTime.Now;
+
+            Console.WriteLine($"Creating Todo!");
+            JSRuntime.InvokeVoidAsync("console.log", todo); 
+            //await TodoService.CreateTodo(todo); 
+
+            await TodoService.CreateTodo(todo); 
+
+            NavigationManager.NavigateTo($"todo/");
+        }
+        else
+        {
+            Console.WriteLine($"Updating Todo!");
+            JSRuntime.InvokeVoidAsync("console.log", todo);
+            // TodoService.UpdateTodo(todo); 
+        }
     }
 }

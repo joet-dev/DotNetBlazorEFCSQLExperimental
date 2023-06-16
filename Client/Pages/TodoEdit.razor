@@ -5,6 +5,8 @@
 
 @inject ITodoService TodoService; 
 
+<PageTitle>Todo</PageTitle>
+
 @if (todo == null)
 {
     <span>Todo is loading...</span>
@@ -13,7 +15,7 @@ else
 {
     <h3 class="mb-4">Edit Todo - @todo.Title</h3>
 
-    <TodoForm id="@id"/>
+    <TodoForm todo="@todo"/>
     <br />
 }
 
@@ -21,7 +23,7 @@ else
     [Parameter]
     public int id { get; set; }
 
-    Todo todo = new Todo();  
+    Todo? todo;  
 
     protected override async Task OnInitializedAsync()
     {
