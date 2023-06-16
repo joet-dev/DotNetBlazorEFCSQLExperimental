@@ -29,9 +29,16 @@ namespace DotNetBlazorEFCSQLExperimental.Client.Services
             return todos; 
         }
 
-        public async void UpdateTodo(Todo todo)
+        public async Task<Todo> UpdateTodo(Todo todo)
         {
-            await _httpClient.PutAsJsonAsync($"api/todo/{todo.Id}", todo);
+            var result = await _httpClient.PutAsJsonAsync($"api/todo/{todo.Id}", todo);
+            var restodo = await result.Content.ReadFromJsonAsync<Todo>();
+            return restodo; 
+        }
+
+        public async Task<Todo> RemoveTodo(int id)
+        {
+            return await _httpClient.DeleteFromJsonAsync<Todo>($"api/todo/{id}"); 
         }
     }
 }

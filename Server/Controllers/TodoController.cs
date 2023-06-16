@@ -41,7 +41,14 @@ namespace DotNetBlazorEFCSQLExperimental.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateTodo(Todo todo)
         {
-            todo.Id = todos.Max(t => t.Id + 1); 
+            if (todos.Count > 0)
+            {
+                todo.Id = todos.Max(t => t.Id + 1);
+            }
+            else
+            {
+                todo.Id = 1;
+            }
             todos.Add(todo);
 
             return Ok(todos); 
@@ -50,12 +57,20 @@ namespace DotNetBlazorEFCSQLExperimental.Server.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTodo(int id, Todo todo)
         {
-            var item = todos.SingleOrDefault(x => x.Id == id);
-            if (item != null) todos.Remove(item);
+            await RemoveTodo(id); 
 
             todos.Add(todo); 
 
-            return Ok();
+            return Ok(todo);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> RemoveTodo(int id)
+        { 
+            var item = todos.SingleOrDefault(x => x.Id == id);
+            if (item != null) todos.Remove(item);
+
+            return Ok(item);
         }
     }
 }

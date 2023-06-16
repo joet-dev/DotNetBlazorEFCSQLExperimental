@@ -43,8 +43,12 @@
             </div>
         </div>
     </div>
-    <button type="submit" class="create-button btn btn-primary mb-3">@submitButtonLabel</button>
+    <button type="submit" class="submit-button btn mb-3">@submitButtonLabel</button>
 </EditForm>
+@if (!modeCreate)
+{
+    <button @onclick="HandleRemove" class="remove-button btn btn-danger mb-3">Remove</button>
+}
 
 @code {
     [Parameter]
@@ -107,8 +111,16 @@
             Console.WriteLine($"Updating Todo!");
             await JSRuntime.InvokeVoidAsync("console.log", todo);
 
-            TodoService.UpdateTodo(todo); 
+            await TodoService.UpdateTodo(todo); 
             NavigationManager.NavigateTo($"todo/");
         }
+    }
+
+    async void HandleRemove()
+    {
+        Console.WriteLine($"Removing Todo @ todo.Id!");
+        await TodoService.RemoveTodo(todo.Id);
+
+        NavigationManager.NavigateTo($"todo/");
     }
 }
