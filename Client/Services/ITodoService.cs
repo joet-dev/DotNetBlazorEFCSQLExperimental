@@ -8,5 +8,7 @@ namespace DotNetBlazorEFCSQLExperimental.Client.Services
         Task<Todo> GetTodo(int id);
 
         //Task<Todo> UpdateTodo(Todo todo);
+
+        Task<List<Todo>> CreateTodo(Todo todo); 
     }
 }

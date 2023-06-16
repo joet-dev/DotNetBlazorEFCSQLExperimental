@@ -1,0 +1,59 @@
+﻿.input-container {
+    display: grid;
+    grid-template-columns: fit-content(120px) fit-content(188px) fit-content(280px) auto;
+    grid-column-gap: 20px;
+}
+
+.priority-container {
+    max-width: 120px;
+}
+.priority-input {
+    min-width: 70px;
+}
+
+.duration-container {
+    max-width: 188px;
+}
+.duration-input {
+    min-width: 70px;
+    margin-right: 10px; 
+}
+.durationtype-input {
+    width: auto; 
+}
+
+.datetime-container {
+
+}
+.date-input {
+    margin-right: 10px; 
+    min-width: 160px; 
+}
+.time-input {
+    min-width: 110px; 
+}
+
+
+
+.create-button {
+    background-color: rgb(0, 190, 0);
+    border: rgb(0, 170, 0);
+    box-shadow: 0 6px 12px 0 rgba(0,0,0,0.2), 0 2px 8px 0 rgba(0,0,0,0.19);
+}
+
+.create-button:hover {
+    background-color: rgb(0, 160, 0);
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2), 0 2px 4px 0 rgba(0,0,0,0.19);
+}
+
+@media (max-width: 880px) {
+    .input-container {
+        grid-template-columns: 72px 188px;
+        grid-template-rows: 1.2fr 1fr;
+    }
+
+    .datetime-container {
+        grid-column: span 2;
+    }
+}
+

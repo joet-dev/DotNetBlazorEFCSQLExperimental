@@ -41,5 +41,13 @@ namespace DotNetBlazorEFCSQLExperimental.Server.Controllers
         //{
 
         //}
+
+        [HttpPost]
+        public async Task<IActionResult> CreateTodo(Todo todo)
+        {
+            todos.Add(todo);
+
+            return Ok(); 
+        }
     }
 }

@@ -15,6 +15,7 @@ namespace DotNetBlazorEFCSQLExperimental.Shared
         public string Note { get; set; }
         public DateTime Created { get; set; }
         public int Duration { get; set; }
+        public DateTime Due { get; set; }
         public DateTime? Completed { get; set; }
     }
 }

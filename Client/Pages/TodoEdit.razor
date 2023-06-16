@@ -7,60 +7,24 @@
 
 @if (todo == null)
 {
-    <span>Hero is loading...</span>
+    <span>Todo is loading...</span>
 }
 else
 {
-    <h3>Edit Todo: @todo.Title</h3>
-@*    <EditForm Model="todo" OnValidSubmit="UpdateTodo">*@
-        <div class="mb-3">
-            <label class="form-label" for="title">Title</label>
-            <input type="text" class="form-control" id="title" name="title" placeholder="Title" @bind-value="todo.Title" />
-        </div>
+    <h3 class="mb-4">Edit Todo - @todo.Title</h3>
 
-        <div class="input-container">
-            <div class="priority-container mb-3">
-                <label class="form-label" for="priority">Priority</label>
-                <input class="priority-input form-control" type="number" id="priority" name="priority" min="1" max="10" @bind-value="todo.Priority" />
-            </div>
-
-            <div class="duration-area mb-3">
-                <label class="form-label" for="duration">Duration</label>
-                <div class="row">
-                    <div class="col-auto">
-                        <input type="number" class="form-control" id="duration" name="duration" min="1" @bind-value="todo.Duration" />
-                    </div>
-                    <div class="col-auto gx-0">
-                        <select class="form-control" name="durationtype" id="durationtype" @bind="selectedDurationType" required>
-                            <option value="" selected disabled>-Select-</option>
-                            <option value="1440">Days</option>
-                            <option value="60">Hrs</option>
-                            <option value="1">Mins</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <button type="submit" class="create-button btn btn-primary">Create</button>
-@*    </EditForm>*@
+    <TodoForm id="@id"/>
+    <br />
 }
-
-
 
 @code {
     [Parameter]
     public int id { get; set; }
 
-    private int selectedDurationType; 
     Todo todo = new Todo();  
 
     protected override async Task OnInitializedAsync()
     {
         todo = await TodoService.GetTodo(id);
     }
-
-    //public async Task UpdateTodo()
-    //{
-    //    await    
-    //}
 }

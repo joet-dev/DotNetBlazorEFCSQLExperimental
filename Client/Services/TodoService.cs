@@ -22,6 +22,13 @@ namespace DotNetBlazorEFCSQLExperimental.Client.Services
             return await _httpClient.GetFromJsonAsync<List<Todo>>("api/todo");
         }
 
+        public async Task<List<Todo>> CreateTodo(Todo todo)
+        {
+            var result = await _httpClient.PostAsJsonAsync<Todo>($"api/todo", todo);
+            var todos = await result.Content.ReadFromJsonAsync<List<Todo>>();
+            return todos; 
+        }
+
         //public async void UpdateTodo(Todo todo)
         //{
         //    throw new NotImplementedException();
