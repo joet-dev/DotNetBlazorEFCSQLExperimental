@@ -4,7 +4,8 @@ using DotNetBlazorEFCSQLExperimental.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks; 
+using System.Threading.Tasks;
+using DotNetBlazorEFCSQLExperimental.Server.Data;
 
 namespace DotNetBlazorEFCSQLExperimental.Server.Controllers
 {
@@ -12,12 +13,20 @@ namespace DotNetBlazorEFCSQLExperimental.Server.Controllers
     [ApiController]
     public class TodoController : ControllerBase
     {
-        static List<Todo> todos = new List<Todo>();
+        //static List<Todo> todos = new List<Todo>();
+        // Change IActionResults to Task<ActionResult<List<Todo>>>
+
+        private readonly DataContext _context;
+        public TodoController(DataContext context)
+        {
+            _context = context; 
+        }
 
         // Get all todos. 
         [HttpGet]
         public async Task<IActionResult> GetTodos()
         {
+            var todos = await _context.Todo.ToListAsync();
             return Ok(todos); 
         }
 
@@ -25,7 +34,7 @@ namespace DotNetBlazorEFCSQLExperimental.Server.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetSingleTodo(int id)
         {
-            var todo = todos.FirstOrDefault(x => x.Id == id);
+            var todo = await _context.Todo.FirstOrDefaultAsync(x => x.Id == id);
             if (todo == null)
             {
                 return NotFound("Todo not found.");
@@ -38,31 +47,29 @@ namespace DotNetBlazorEFCSQLExperimental.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateTodo(Todo todo)
         {
-            if (todos.Count > 0)
-            {
-                todo.Id = todos.Max(t => t.Id + 1);
-            }
-            else
-            {
-                todo.Id = 1;
-            }
-            todos.Add(todo);
+            _context.Todo.Add(todo);
+            await _context.SaveChangesAsync(); 
 
-            return Ok(todos); 
+            return Ok(await GetTodos()); 
         }
 
         // Update todo.
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTodo(int id, Todo todo)
         {
-            var item = todos.SingleOrDefault(x => x.Id == id);
-            if (item == null)
+            var updateTodo = await _context.Todo.FirstOrDefaultAsync(x => x.Id == id);
+            if (updateTodo == null)
             {
                 return NotFound("Todo not found.");
             }
 
-            var todoidx = todos.IndexOf(item); 
-            todos[todoidx] = todo; 
+            updateTodo.Title = todo.Title;
+            updateTodo.Note = todo.Note;
+            updateTodo.Priority = todo.Priority;
+            updateTodo.Duration = todo.Duration;
+            updateTodo.Due = todo.Due;
+
+            await _context.SaveChangesAsync();
 
             return Ok(todo);
         }
@@ -72,14 +79,15 @@ namespace DotNetBlazorEFCSQLExperimental.Server.Controllers
         [Route("{id}/changestate")]
         public async Task<IActionResult> UpdateTodoState(int id)
         {
-            var item = todos.SingleOrDefault(x => x.Id == id);
-            if (item == null)
+            var updateTodo = await _context.Todo.FirstOrDefaultAsync(x => x.Id == id);
+            if (updateTodo == null)
             {
                 return NotFound("Todo not found.");
             }
 
-            var todoidx = todos.IndexOf(item);
-            todos[todoidx].IsDone = !todos[todoidx].IsDone;
+            updateTodo.IsDone = !updateTodo.IsDone;
+
+            await _context.SaveChangesAsync();
 
             return Ok(); 
         }
@@ -87,16 +95,18 @@ namespace DotNetBlazorEFCSQLExperimental.Server.Controllers
         // Delete todo.
         [HttpDelete("{id}")]
         public async Task<IActionResult> RemoveTodo(int id)
-        { 
-            var item = todos.SingleOrDefault(x => x.Id == id);
-            if (item == null)
+        {
+            var deleteTodo = await _context.Todo.FirstOrDefaultAsync(x => x.Id == id);
+            if (deleteTodo == null)
             {
-               return NotFound("Todo not found.");
+                return NotFound("Todo not found.");
             }
 
-            todos.Remove(item);
+            _context.Todo.Remove(deleteTodo);
 
-            return Ok(item);
+            await _context.SaveChangesAsync();
+
+            return Ok(deleteTodo);
         }
     }
 }
