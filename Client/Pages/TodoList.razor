@@ -24,7 +24,7 @@
 
 @foreach (var todo in todolist)
 {
-    <div class="card-attr card shadow-sm mb-0 mb-md-2">
+    <div class="card shadow-sm mb-0 mb-md-2">
         <div class="card-body p-md-3 p-2">
             <div class="row gx-2 align-items-center justify-content-between">
                 <div class="title-constraint card-title col-auto mb-0">
@@ -40,7 +40,7 @@
                     <small class="priority-format" style="--num:@GetColour(todo.Priority)">@todo.Priority</small>
                 </div>
                 <div class="btn-container col-auto">
-                    <button class="btn btn-primary" @onclick="(() => EditTodo(todo.Id))">Edit</button>
+                    <button class="edit-btn btn btn-primary" @onclick="(() => EditTodo(todo.Id))"><span>Edit</span></button>
                     <button class="hide-show-btn btn btn-primary" @onclick="(() => ToggleDetails(todo.Id))">@(IsOpen(todo.Id) ? "Hide" : "Show")</button>
                 </div>
             </div>
@@ -66,8 +66,7 @@
                     <div class="col-auto lh-1 py-1">Created: @todo.Created.ToString("dd.MM.yy hh:mm tt")</div>
                 </div>
             </div>
-
-            
+            <div class="touch-area" @onclick="(() => ToggleDetails(todo.Id))"></div>
         </div>
     </div>
 }
