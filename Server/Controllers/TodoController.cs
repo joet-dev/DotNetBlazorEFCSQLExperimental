@@ -69,10 +69,9 @@ namespace DotNetBlazorEFCSQLExperimental.Server.Controllers
 
         // Update todo state. 
         [HttpPut]
-        
+        [Route("{id}/changestate")]
         public async Task<IActionResult> UpdateTodoState(int id)
         {
-            Console.WriteLine($"SERVER: This is the id requested for state change: {id}"); 
             var item = todos.SingleOrDefault(x => x.Id == id);
             if (item == null)
             {

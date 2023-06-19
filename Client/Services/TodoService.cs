@@ -39,8 +39,7 @@ namespace DotNetBlazorEFCSQLExperimental.Client.Services
 
         public async void UpdateTodoState(int id)
         {
-            Console.WriteLine($"CLIENT: This is the id requested for state change: {id}");
-            await _httpClient.PutAsJsonAsync($"api/todo", id); 
+            await _httpClient.PutAsJsonAsync($"api/todo/{id}/changestate", id); 
         }
 
         public async Task<Todo> RemoveTodo(int id)
