@@ -28,7 +28,7 @@ namespace DotNetBlazorEFCSQLExperimental.Server.Controllers
             var todo = todos.FirstOrDefault(x => x.Id == id);
             if (todo == null)
             {
-                return NotFound("Todo not found."); 
+                return NotFound("Todo not found.");
             }
 
             return Ok(todo);
