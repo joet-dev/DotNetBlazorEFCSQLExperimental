@@ -8,12 +8,12 @@
 
 <PageTitle>Todo</PageTitle>
 
-<div class="row mb-4">
-    <div class="col-auto">
-        <h1>Todo List</h1>
+<div class="row align-items-center justify-content-between mb-3 mb-md-4 mt-md-2 mt-0 mx-md-0 mx-4">
+    <div class="col-auto px-0">
+        <h1 class="page-title">Todo List</h1>
     </div>
-    <div class="col-auto">
-        <button type="button" class="btn btn-success" @onclick="CreateTodo">Create</button>
+    <div class="col-auto px-0">
+        <button type="button" class="btn create-button" @onclick="CreateTodo">Create</button>
     </div>
 </div>
 
@@ -24,29 +24,47 @@
 
 @foreach (var todo in todolist)
 {
-    <div class="card shadow-sm mb-2">
-        <div class="card-body">
-            <div class="card-title">
-                <input class="check-input" type="checkbox" @bind="todo.IsDone" @onclick="(()=> ToggleTodoState(todo.Id))">
-                <h5>@todo.Title</h5>
-                <small class="priority-format">@todo.Priority</small>
-                <p class="card-subtitle text-muted">@todo.Created.AddMinutes(todo.Duration).ToString()</p>
-            </div>
-            <div class="@(IsOpen(todo.Id) ? "show" : "hide")">
-                <p>Created: @todo.Created</p>
-                <p>Due: @todo.Due</p>
-                @if (todo.Completed != null)
-                {
-                    <p>Completed: @todo.Completed</p>
-                }
-                else
-                {
-                    <p>Incomplete</p>
-                }
+    <div class="card shadow-sm mb-0 mb-md-2">
+        <div class="card-body p-md-3 p-2">
+            <div class="row align-items-center justify-content-between">
+                <div class="card-title col-auto mb-0">
+                    <div class="d-inline-flex align-items-center gap-3 mb-1">
+                        <input class="check-input" type="checkbox" @bind="todo.IsDone" @onclick="(()=> ToggleTodoState(todo.Id))">
+                        <h5 class="mb-0">@todo.Title</h5>
+                        <small class="priority-format" style="--num:@GetColour(todo.Priority)">@todo.Priority</small>
+                    </div>
+                    <p class="card-subtitle font-monospace text-muted">Due: @(GetTimeDelta(todo.Due))</p>
+                </div>
+
+                <div class="col-auto">
+                    <button class="btn btn-primary" @onclick="(() => EditTodo(todo.Id))">Edit</button>
+                    <button class="hide-show-btn btn btn-primary" @onclick="(() => ToggleDetails(todo.Id))">@(IsOpen(todo.Id) ? "Hide" : "Show")</button>
+                </div>
             </div>
 
-            <button class="btn btn-primary" @onclick="(() => EditTodo(todo.Id))">Edit</button>
-            <button class="btn btn-primary" @onclick="(() => ToggleDetails(todo.Id))">@(IsOpen(todo.Id) ? "Hide" : "Show")</button>
+
+            <div class="@(IsOpen(todo.Id) ? "show" : "hide") font-monospace">
+                <div class="pt-2"></div>
+               
+                @if (todo.Note != null)
+                {
+                    <div class="border-top lh-1 py-1"><b>Note:</b> @todo.Note</div>
+                }
+                
+                @if (todo.Duration != 0)
+                {
+                    <div class="border-top lh-1 py-1"><b>Duration:</b> @(todo.Duration/60)hr @(todo.Duration%60)min</div>
+                }
+                <div class="todo-metadata row justify-content-between border-top text-muted">
+                    @if (todo.Completed != null)
+                    {
+                        <div class="col-auto lh-1 py-1">Completed: @(((DateTime)todo.Completed).ToString("dd.MM.yy hh:mm tt"))</div>
+                    }
+                    <div class="col-auto lh-1 py-1">Created: @todo.Created.ToString("dd.MM.yy hh:mm tt")</div>
+                </div>
+            </div>
+
+            
         </div>
     </div>
 }
@@ -58,6 +76,53 @@
     HashSet<int> open = new HashSet<int>(); // This hashset is used to track which items are toggled. 
 
     //int id; 
+
+    public string GetColour(int x)
+    {
+        int r;
+        int g;
+        int multi = 40; // 0 - 51
+        if (x > 5)
+        {
+            r = multi*5;
+            g = (int)((multi * 5) - ((x - 5) * multi));
+        }
+        else if (x < 5)
+        {
+            g = multi * 5;
+            r = (int)(x * multi);
+        }
+        else
+        {
+            g = multi * 5;
+            r = multi * 5;
+        }
+        return $"rgb( { r}, { g}, 0)";
+    }
+
+    public string GetTimeDelta(DateTime dt)
+    {
+        string timeType;
+        int result; 
+        var difference = dt - DateTime.Now;
+        if (difference.TotalHours > 24)
+        {
+            result = (int) difference.TotalDays;
+            timeType = "days";
+        }
+        else if (difference.TotalMinutes > 60)
+        {
+            result = (int) difference.TotalHours;
+            timeType = "hours";
+        }
+        else
+        {
+            result = (int) difference.TotalMinutes;
+            timeType = "minutes";
+        }
+        if (result <= 0) return "OVERDUE";
+        return $"{result.ToString()} {timeType}";
+    }
 
     protected override async Task OnInitializedAsync()
     {

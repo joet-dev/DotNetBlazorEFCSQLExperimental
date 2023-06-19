@@ -7,17 +7,19 @@
 
 <PageTitle>Todo</PageTitle>
 
-@if (todo == null)
-{
-    <span>Todo is loading...</span>
-}
-else
-{
-    <h3 class="mb-4">Edit Todo</h3>
+<div class="px-3">
+    @if (todo == null)
+    {
+        <span>Todo is loading...</span>
+    }
+    else
+    {
+        <h3 class="mb-3 mt-2">Edit Todo</h3>
 
-    <TodoForm todo="@todo"/>
-    <br />
-}
+        <TodoForm todo="@todo" />
+        <br />
+    }
+</div>
 
 @code {
     [Parameter]
