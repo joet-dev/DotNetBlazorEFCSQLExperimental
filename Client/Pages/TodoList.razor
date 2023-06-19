@@ -8,7 +8,7 @@
 
 <PageTitle>Todo</PageTitle>
 
-<div class="row">
+<div class="row mb-4">
     <div class="col-auto">
         <h1>Todo List</h1>
     </div>
@@ -17,23 +17,36 @@
     </div>
 </div>
 
-<form class="mb-4">
+@*<form class="mb-4">
     <input type="number" @bind="id" />
     <button @onclick="GetTodo">Search</button>
-</form>
+</form>*@
 
 @foreach (var todo in todolist)
 {
     <div class="card shadow-sm mb-2">
         <div class="card-body">
             <div class="card-title">
-                <input class="check-input" type="checkbox" @bind="todo.IsDone" @onclick="(()=> UpdateTodoState(todo.Id))">
+                <input class="check-input" type="checkbox" @bind="todo.IsDone" @onclick="(()=> ToggleTodoState(todo.Id))">
                 <h5>@todo.Title</h5>
                 <small class="priority-format">@todo.Priority</small>
                 <p class="card-subtitle text-muted">@todo.Created.AddMinutes(todo.Duration).ToString()</p>
             </div>
-            
+            <div class="@(IsOpen(todo.Id) ? "show" : "hide")">
+                <p>Created: @todo.Created</p>
+                <p>Due: @todo.Due</p>
+                @if (todo.Completed != null)
+                {
+                    <p>Completed: @todo.Completed</p>
+                }
+                else
+                {
+                    <p>Incomplete</p>
+                }
+            </div>
+
             <button class="btn btn-primary" @onclick="(() => EditTodo(todo.Id))">Edit</button>
+            <button class="btn btn-primary" @onclick="(() => ToggleDetails(todo.Id))">@(IsOpen(todo.Id) ? "Hide" : "Show")</button>
         </div>
     </div>
 }
@@ -42,28 +55,47 @@
 
 @code {
     List<Todo> todolist = new List<Todo>();
+    HashSet<int> open = new HashSet<int>(); // This hashset is used to track which items are toggled. 
 
-    int id; 
+    //int id; 
 
     protected override async Task OnInitializedAsync()
     {
-        todolist = await TodoService.GetTodos(); 
+        todolist = await TodoService.GetTodos();
     }
 
-    public async Task GetTodo()
+    // Refresh a specific todo. 
+    public async Task GetTodo(int id)
     {
-        todolist.Clear(); 
-        todolist.Add(await TodoService.GetTodo(id)); 
+        
     }
 
     public void EditTodo(int id)
     {
-        NavigationManager.NavigateTo($"todo/{id}");
+        NavigationManager.NavigateTo($"todo/{id}/edit");
     }
 
-    public void UpdateTodoState(int id)
+    public bool IsOpen(int id)
     {
-        TodoService.UpdateTodoState(id); 
+        return open.Contains(id); 
+    }
+
+    public void ToggleDetails(int id)
+    {
+        if (open.Contains(id))
+        {
+            open.Remove(id); 
+        }
+        else
+        {
+            open.Add(id); 
+        }
+    }
+
+    public async Task ToggleTodoState(int id)
+    {
+        int idx = todolist.FindIndex(t => t.Id == id);
+        todolist[idx] = await TodoService.UpdateTodoState(id);
     }
 
     public void CreateTodo()

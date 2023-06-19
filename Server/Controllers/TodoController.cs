@@ -26,6 +26,8 @@ namespace DotNetBlazorEFCSQLExperimental.Server.Controllers
         [HttpGet]
         public async Task<IActionResult> GetTodos()
         {
+            Console.WriteLine("\nHTTP GET: api/todo\nFUNC: GetTodos()\n");
+
             var todos = await _context.Todo.ToListAsync();
             return Ok(todos); 
         }
@@ -34,6 +36,8 @@ namespace DotNetBlazorEFCSQLExperimental.Server.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetSingleTodo(int id)
         {
+            Console.WriteLine("\nHTTP GET: api/todo/{id}\nFUNC: GetSingleTodo(int)\n");
+
             var todo = await _context.Todo.FirstOrDefaultAsync(x => x.Id == id);
             if (todo == null)
             {
@@ -47,16 +51,20 @@ namespace DotNetBlazorEFCSQLExperimental.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateTodo(Todo todo)
         {
+            Console.WriteLine("\nHTTP POST: api/todo\nFUNC: CreateTodo(Todo)\n");
+
             _context.Todo.Add(todo);
             await _context.SaveChangesAsync(); 
 
-            return Ok(await GetTodos()); 
+            return Ok(todo); 
         }
 
         // Update todo.
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTodo(int id, Todo todo)
         {
+            Console.WriteLine("\nHTTP PUT: api/todo/{id}\nFUNC: UpdateTodo(int, Todo)\n");
+
             var updateTodo = await _context.Todo.FirstOrDefaultAsync(x => x.Id == id);
             if (updateTodo == null)
             {
@@ -79,6 +87,8 @@ namespace DotNetBlazorEFCSQLExperimental.Server.Controllers
         [Route("{id}/changestate")]
         public async Task<IActionResult> UpdateTodoState(int id)
         {
+            Console.WriteLine("\nHTTP PUT: api/todo/{id}/changestate\nFUNC: UpdateTodoState(int)\n");
+
             var updateTodo = await _context.Todo.FirstOrDefaultAsync(x => x.Id == id);
             if (updateTodo == null)
             {
@@ -86,16 +96,26 @@ namespace DotNetBlazorEFCSQLExperimental.Server.Controllers
             }
 
             updateTodo.IsDone = !updateTodo.IsDone;
+            if (updateTodo.IsDone)
+            {
+                updateTodo.Completed = DateTime.Now; 
+            }
+            else
+            {
+                updateTodo.Completed = null; 
+            }
 
             await _context.SaveChangesAsync();
 
-            return Ok(); 
+            return Ok(updateTodo); 
         }
 
         // Delete todo.
         [HttpDelete("{id}")]
         public async Task<IActionResult> RemoveTodo(int id)
         {
+            Console.WriteLine("\nHTTP DELETE: api/todo/{id}\nFUNC: RemoveTodo(int)\n");
+
             var deleteTodo = await _context.Todo.FirstOrDefaultAsync(x => x.Id == id);
             if (deleteTodo == null)
             {

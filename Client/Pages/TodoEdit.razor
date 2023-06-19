@@ -1,4 +1,4 @@
-﻿@page "/todo/{id:int}"
+﻿@page "/todo/{id:int}/edit"
 
 @using DotNetBlazorEFCSQLExperimental.Client.Services;
 @using DotNetBlazorEFCSQLExperimental.Shared;
@@ -13,7 +13,7 @@
 }
 else
 {
-    <h3 class="mb-4">Edit Todo - @todo.Title</h3>
+    <h3 class="mb-4">Edit Todo</h3>
 
     <TodoForm todo="@todo"/>
     <br />

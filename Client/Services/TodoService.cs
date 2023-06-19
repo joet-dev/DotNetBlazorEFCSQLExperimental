@@ -23,23 +23,25 @@ namespace DotNetBlazorEFCSQLExperimental.Client.Services
             return await _httpClient.GetFromJsonAsync<List<Todo>>("api/todo");
         }
 
-        public async Task<List<Todo>> CreateTodo(Todo todo)
+        public async Task<Todo> CreateTodo(Todo todo)
         {
             var result = await _httpClient.PostAsJsonAsync($"api/todo", todo);
-            var todos = await result.Content.ReadFromJsonAsync<List<Todo>>();
-            return todos; 
+            var restodo = await result.Content.ReadFromJsonAsync<Todo>();
+            return restodo;
         }
 
         public async Task<Todo> UpdateTodo(Todo todo)
         {
-            var result = await _httpClient.PutAsJsonAsync($"api/todo/{todo.Id}", todo);
-            var restodo = await result.Content.ReadFromJsonAsync<Todo>();
-            return restodo; 
+            var res = await _httpClient.PutAsJsonAsync($"api/todo/{todo.Id}", todo);
+            var resTodo = await res.Content.ReadFromJsonAsync<Todo>();
+            return resTodo; 
         }
 
-        public async void UpdateTodoState(int id)
+        public async Task<Todo> UpdateTodoState(int id)
         {
-            await _httpClient.PutAsJsonAsync($"api/todo/{id}/changestate", id); 
+            var res = await _httpClient.PutAsJsonAsync($"api/todo/{id}/changestate", id);
+            var resTodo = await res.Content.ReadFromJsonAsync<Todo>();
+            return resTodo; 
         }
 
         public async Task<Todo> RemoveTodo(int id)

@@ -6,10 +6,10 @@ namespace DotNetBlazorEFCSQLExperimental.Client.Services
     {
         Task<List<Todo>> GetTodos();
         Task<Todo> GetTodo(int id);
-        Task<List<Todo>> CreateTodo(Todo todo);
+        Task<Todo> CreateTodo(Todo todo);
         Task<Todo> UpdateTodo(Todo todo);
 
-        void UpdateTodoState(int id); 
+        Task<Todo> UpdateTodoState(int id); 
         Task<Todo> RemoveTodo(int id);
     }
 }
