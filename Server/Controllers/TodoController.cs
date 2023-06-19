@@ -12,32 +12,29 @@ namespace DotNetBlazorEFCSQLExperimental.Server.Controllers
     [ApiController]
     public class TodoController : ControllerBase
     {
-        static List<Todo> todos = new List<Todo>
-        {
-            new Todo { Id=4, Title="TEST", IsDone=false, Priority=4, Note="TEST", Created=DateTime.Now, Due=DateTime.Now, Duration=10  },
-            new Todo { Id=0, Title="TestZero", IsDone=false, Priority=4, Note="Testing...", Created=DateTime.Now, Due=DateTime.Now, Duration=10 },
-            new Todo { Id=1, Title="TestTitle", IsDone=false, Priority=5, Note="TestNote", Created=DateTime.Now, Due=DateTime.Now, Duration=10 },
-            new Todo { Id=2, Title="TestTitle2", IsDone=false, Priority=6, Note="TestNote2", Created=DateTime.Now, Due=DateTime.Now, Duration=10 }
-        };
+        static List<Todo> todos = new List<Todo>();
 
+        // Get all todos. 
         [HttpGet]
         public async Task<IActionResult> GetTodos()
         {
             return Ok(todos); 
         }
 
+        // Get todo by id. 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetSingleTodo(int id)
         {
             var todo = todos.FirstOrDefault(x => x.Id == id);
             if (todo == null)
             {
-                return NotFound("Todo wasn't found. Too bad. :("); 
+                return NotFound("Todo not found."); 
             }
 
             return Ok(todo);
         }
 
+        // Create todo.
         [HttpPost]
         public async Task<IActionResult> CreateTodo(Todo todo)
         {
@@ -54,21 +51,51 @@ namespace DotNetBlazorEFCSQLExperimental.Server.Controllers
             return Ok(todos); 
         }
 
+        // Update todo.
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTodo(int id, Todo todo)
         {
-            await RemoveTodo(id); 
+            var item = todos.SingleOrDefault(x => x.Id == id);
+            if (item == null)
+            {
+                return NotFound("Todo not found.");
+            }
 
-            todos.Add(todo); 
+            var todoidx = todos.IndexOf(item); 
+            todos[todoidx] = todo; 
 
             return Ok(todo);
         }
 
+        // Update todo state. 
+        [HttpPut]
+        
+        public async Task<IActionResult> UpdateTodoState(int id)
+        {
+            Console.WriteLine($"SERVER: This is the id requested for state change: {id}"); 
+            var item = todos.SingleOrDefault(x => x.Id == id);
+            if (item == null)
+            {
+                return NotFound("Todo not found.");
+            }
+
+            var todoidx = todos.IndexOf(item);
+            todos[todoidx].IsDone = !todos[todoidx].IsDone;
+
+            return Ok(); 
+        }
+
+        // Delete todo.
         [HttpDelete("{id}")]
         public async Task<IActionResult> RemoveTodo(int id)
         { 
             var item = todos.SingleOrDefault(x => x.Id == id);
-            if (item != null) todos.Remove(item);
+            if (item == null)
+            {
+               return NotFound("Todo not found.");
+            }
+
+            todos.Remove(item);
 
             return Ok(item);
         }

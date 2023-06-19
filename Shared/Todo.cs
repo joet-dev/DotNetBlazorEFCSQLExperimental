@@ -12,7 +12,7 @@ namespace DotNetBlazorEFCSQLExperimental.Shared
         public string Title { get; set; }
         public bool IsDone { get; set; } = false; 
         public int Priority { get; set; }
-        public string Note { get; set; }
+        public string? Note { get; set; }
         public DateTime Created { get; set; }
         public int Duration { get; set; }
         public DateTime Due { get; set; }

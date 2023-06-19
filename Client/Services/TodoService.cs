@@ -1,4 +1,5 @@
 ﻿using DotNetBlazorEFCSQLExperimental.Shared;
+using System.Net;
 using System.Net.Http.Json;
 
 namespace DotNetBlazorEFCSQLExperimental.Client.Services
@@ -34,6 +35,12 @@ namespace DotNetBlazorEFCSQLExperimental.Client.Services
             var result = await _httpClient.PutAsJsonAsync($"api/todo/{todo.Id}", todo);
             var restodo = await result.Content.ReadFromJsonAsync<Todo>();
             return restodo; 
+        }
+
+        public async void UpdateTodoState(int id)
+        {
+            Console.WriteLine($"CLIENT: This is the id requested for state change: {id}");
+            await _httpClient.PutAsJsonAsync($"api/todo", id); 
         }
 
         public async Task<Todo> RemoveTodo(int id)

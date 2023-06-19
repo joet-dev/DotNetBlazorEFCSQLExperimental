@@ -26,14 +26,13 @@
 {
     <div class="card shadow-sm mb-2">
         <div class="card-body">
-            <h5 class="card-title">
-                <input class="check-input" type="checkbox" @bind="todo.IsDone">
-                @todo.Title <small>@todo.Priority</small>
-            </h5>
-            <p class="card-subtitle text-muted">@todo.Created.AddMinutes(todo.Duration).ToString()</p>
-            <p class="card-text">
-                @todo.Note
-            </p>
+            <div class="card-title">
+                <input class="check-input" type="checkbox" @bind="todo.IsDone" @onclick="(()=> UpdateTodoState(todo.Id))">
+                <h5>@todo.Title</h5>
+                <small class="priority-format">@todo.Priority</small>
+                <p class="card-subtitle text-muted">@todo.Created.AddMinutes(todo.Duration).ToString()</p>
+            </div>
+            
             <button class="btn btn-primary" @onclick="(() => EditTodo(todo.Id))">Edit</button>
         </div>
     </div>
@@ -60,6 +59,11 @@
     public void EditTodo(int id)
     {
         NavigationManager.NavigateTo($"todo/{id}");
+    }
+
+    public void UpdateTodoState(int id)
+    {
+        TodoService.UpdateTodoState(id); 
     }
 
     public void CreateTodo()
