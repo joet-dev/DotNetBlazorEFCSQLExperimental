@@ -24,19 +24,22 @@
 
 @foreach (var todo in todolist)
 {
-    <div class="card shadow-sm mb-0 mb-md-2">
+    <div class="card-attr card shadow-sm mb-0 mb-md-2">
         <div class="card-body p-md-3 p-2">
-            <div class="row align-items-center justify-content-between">
-                <div class="card-title col-auto mb-0">
-                    <div class="d-inline-flex align-items-center gap-3 mb-1">
+            <div class="row gx-2 align-items-center justify-content-between">
+                <div class="title-constraint card-title col-auto mb-0">
+                    <div class="d-flex align-items-center gap-3 mb-1">
                         <input class="check-input" type="checkbox" @bind="todo.IsDone" @onclick="(()=> ToggleTodoState(todo.Id))">
-                        <h5 class="mb-0">@todo.Title</h5>
-                        <small class="priority-format" style="--num:@GetColour(todo.Priority)">@todo.Priority</small>
+                        <h5 class="@(IsOpen(todo.Id) ? "title-wrap" : "title-overflow") mb-0">@todo.Title</h5>
                     </div>
+                    
                     <p class="card-subtitle font-monospace text-muted">Due: @(GetTimeDelta(todo.Due))</p>
                 </div>
 
-                <div class="col-auto">
+                <div class="priority-container col-auto">
+                    <small class="priority-format" style="--num:@GetColour(todo.Priority)">@todo.Priority</small>
+                </div>
+                <div class="btn-container col-auto">
                     <button class="btn btn-primary" @onclick="(() => EditTodo(todo.Id))">Edit</button>
                     <button class="hide-show-btn btn btn-primary" @onclick="(() => ToggleDetails(todo.Id))">@(IsOpen(todo.Id) ? "Hide" : "Show")</button>
                 </div>

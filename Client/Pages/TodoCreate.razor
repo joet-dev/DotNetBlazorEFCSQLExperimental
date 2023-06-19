@@ -1,13 +1,25 @@
 ﻿@page "/todocreate/"
 
+@inject NavigationManager NavigationManager;
+
 <PageTitle>Todo</PageTitle>
 
 <div class="px-3">
-    <h3 class="mb-3 mt-2">Create Todo</h3>
+    <div class="row align-items-center justify-content-between mb-3 mb-md-4 mt-md-2 mt-0">
+        <div class="col-auto">
+            <h3 class="mt-2">Create Todo</h3>
+        </div>
+        <div class="col-auto">
+            <button type="button" class="btn back-btn" @onclick="Back">Back</button>
+        </div>
+    </div>
 
     <TodoForm />
 </div>
 
 @code {
-
+    public void Back()
+    {
+        NavigationManager.NavigateTo($"todo/");
+    }
 }

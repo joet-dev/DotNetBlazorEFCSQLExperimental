@@ -2,6 +2,25 @@
     margin-bottom: 0px; 
 }
 
+.title-constraint {
+    overflow: hidden; 
+    flex: 1 1 55%; 
+    min-width: 55%;
+}
+.title-overflow {
+    flex-shrink: 1; 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+.title-wrap {
+    flex-shrink: 1;
+    white-space: normal;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
 .create-button {
     background-color: rgb(0, 170, 0);
     color: white;
@@ -14,11 +33,22 @@
     box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2), 0 2px 4px 0 rgba(0,0,0,0.19);
 }
 
+.priority-container {
+    width: 1.7rem;
+    text-align: center;
+    padding-left: 0px; 
+}
+
 .priority-format {
     color: var(--num);
     font-size: 16px;
-    line-height: 1em; 
+    line-height: 1em;
     font-weight: bold;
+}
+
+.btn-container {
+    border-left: 2px solid #dee2e6;
+    padding-left: 10px;
 }
 
 .hide-show-btn {
@@ -54,4 +84,14 @@
     overflow: hidden;
     animation: slideOut 0.4s ease-out;
     transform-origin: top;
+}
+
+@media (max-width: 700px) {
+    .btn-container {
+        display: none; 
+    }
+
+    .card-attr {
+       
+    }
 }

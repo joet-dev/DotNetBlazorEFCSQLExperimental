@@ -4,6 +4,7 @@
 @using DotNetBlazorEFCSQLExperimental.Shared;
 
 @inject ITodoService TodoService; 
+@inject NavigationManager NavigationManager;
 
 <PageTitle>Todo</PageTitle>
 
@@ -14,7 +15,14 @@
     }
     else
     {
-        <h3 class="mb-3 mt-2">Edit Todo</h3>
+        <div class="row align-items-center justify-content-between mb-3 mb-md-4 mt-md-2 mt-0">
+            <div class="col-auto">
+                <h3 class="mt-2">Edit Todo</h3>
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn back-btn" @onclick="Back">Back</button>
+            </div>
+        </div>
 
         <TodoForm todo="@todo" />
         <br />
@@ -30,5 +38,10 @@
     protected override async Task OnInitializedAsync()
     {
         todo = await TodoService.GetTodo(id);
+    }
+
+    public void Back()
+    {
+        NavigationManager.NavigateTo($"todo/");
     }
 }
